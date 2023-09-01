@@ -23,7 +23,7 @@ cryptography==2.8
 customtkinter==5.2.0
 darkdetect==0.8.0
 dbus-python==1.2.16
-defer==1.0.6
+#defer==1.0.6
 distlib==0.3.7
 distro==1.4.0
 distro-info==0.23+ubuntu1.1
