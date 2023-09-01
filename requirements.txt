@@ -19,7 +19,7 @@ Click==7.0
 colorama==0.4.3
 #command-not-found==0.3
 cryptography==2.8
-cupshelpers==1.0
+#cupshelpers==1.0
 customtkinter==5.2.0
 darkdetect==0.8.0
 dbus-python==1.2.16
