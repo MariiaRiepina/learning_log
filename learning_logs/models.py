@@ -26,3 +26,11 @@ class Entry(models.Model):
             return self.text
         else: 
             return self.text[:50] + "..."
+
+class Locations(models.Model):
+    """Specified a locations"""
+    name = models.CharField(max_length=100)
+    description = models.TextField()
+
+    def __str__(self):
+        return self.name

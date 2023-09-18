@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect, Http404
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 
-from .models import Topic, Entry
+from .models import Topic, Entry, Locations
 from .forms import TopicForm, EntryForm
 
 def check_topic_owner(request, topic):
@@ -90,5 +90,14 @@ def edit_entry(request, entry_id):
             return HttpResponseRedirect(reverse('learning_logs:topic', args=[topic.id]))
             
     context = {'entry': entry, 'topic': topic, 'form': form}
-    return render(request, 'learning_logs/edit_entry.html', context) 
-                                                          
+    return render(request, 'learning_logs/edit_entry.html', context)
+
+@login_required()
+def location_list(request):
+    locations = Locations.objects.all()
+    return render(request, 'learning_logs/location_list.html', {'locations': locations})
+
+@login_required()
+def location_detail(request, location_id):
+    location = Locations.objects.get(id=location_id)
+    return render(request, 'learning_logs/location_details.html', {'location': location})

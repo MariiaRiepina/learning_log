@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>List of Locations</title>
+</head>
+<body>
+  <h1>List of Locations</h1>
+  <ul>
+      {% for location in locations %}
+        <li><a href="{% url 'learning_logs:location_detail' location.id %}">{{ location.name }}</a></li>
+      {% endfor %}
+  </ul>
+</body>
+</html>
