@@ -100,4 +100,4 @@ def location_list(request):
 @login_required()
 def location_detail(request, location_id):
     location = Locations.objects.get(id=location_id)
-    return render(request, 'learning_logs/location_details.html', {'location': location})
+    return render(request, 'learning_logs/location_detail.html', {'location': location})
