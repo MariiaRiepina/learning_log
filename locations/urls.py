@@ -1,13 +1,12 @@
-"""Defines URL patterns for users"""
-from django.urls import path, include
+from django.urls import path
 from . import views
-from django.contrib import admin
 
-app_name = 'locations'
+app_name = 'location'
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('locations.urls')),
-    path('locations/add/', views.add_location, name='add_location'),
+    path('locations/', views.LocationsListView.as_view(), name='location_list'),
+    path('locations/<int:pk>/', views.LocationsDetailView.as_view(), name='location_detail'),
+    # Добавьте другие маршруты по необходимости
 ]
+
 

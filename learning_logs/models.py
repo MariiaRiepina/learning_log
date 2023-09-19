@@ -31,6 +31,9 @@ class Locations(models.Model):
     """Specified a locations"""
     name = models.CharField(max_length=100)
     description = models.TextField()
+    creator = models.ForeignKey(User, on_delete=models.CASCADE)
+    parent_location = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
+    hierarchy_level = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return self.name

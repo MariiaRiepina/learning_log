@@ -20,5 +20,7 @@ urlpatterns = [
     path('locations/', views.location_list, name='location_list'),
     #Page for show details locations
     path('locations/<int:location_id>/', views.location_detail, name='location_detail'),
+    #Page for creating a new location
+    path('create_location/', views.create_location, name='create_location'),
 ]
 

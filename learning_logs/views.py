@@ -1,10 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect, Http404
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 
 from .models import Topic, Entry, Locations
-from .forms import TopicForm, EntryForm
+from .forms import TopicForm, EntryForm, LocationForm
 
 def check_topic_owner(request, topic):
     """Check if the current user is the owner of the topic."""
@@ -92,6 +92,43 @@ def edit_entry(request, entry_id):
     context = {'entry': entry, 'topic': topic, 'form': form}
     return render(request, 'learning_logs/edit_entry.html', context)
 
+@login_required
+def create_location(request, hierarchy_level=0):
+    if hierarchy_level > 6:  # Set the maximum hierarchy level as needed
+        return HttpResponse("Maximum hierarchy level reached.")
+
+    top_level_locations = Locations.objects.filter(parent_location__isnull=True)
+
+    if request.method == 'POST':
+        form = LocationForm(request.POST)
+        if form.is_valid():
+            new_location = form.save(commit=False)
+            new_location.creator = request.user
+            new_location.hierarchy_level = hierarchy_level  # Set the hierarchy level
+
+            parent_location_id = request.POST.get('parent_location')
+            if parent_location_id:
+                try:
+                    parent_location = Locations.objects.get(pk=parent_location_id)
+                    new_location.parent_location = parent_location
+                except Locations.DoesNotExist:
+                    pass
+            else:
+                new_location.parent_location = None  # No parent location selected
+
+            new_location.save()
+            return redirect('learning_logs:location_list')
+
+    else:
+        form = LocationForm()
+        form.fields['hierarchy_level'].initial = hierarchy_level
+
+    return render(
+        request,
+        'learning_logs/create_location.html',
+        {'form': form, 'top_level_locations': top_level_locations, 'hierarchy_level': hierarchy_level}
+    )
+
 @login_required()
 def location_list(request):
     locations = Locations.objects.all()
@@ -101,3 +138,5 @@ def location_list(request):
 def location_detail(request, location_id):
     location = Locations.objects.get(id=location_id)
     return render(request, 'learning_logs/location_detail.html', {'location': location})
+
+
