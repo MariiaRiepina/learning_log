@@ -6,14 +6,10 @@
 {% endblock header %}
 
 {% block content %}
-  <form action="{% url 'learning_logs:create_location' %}" method='post' class="form">
-    {% csrf_token %}
-    {% bootstrap_form form %}
-
-    {% buttons %}
-      <button name="submit" class="btn btn-primary">add location</button>
-    {% endbuttons %}
-
-  </form>
-
-{% endblock content %}
+    <h2>Create a New Location</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Create Location</button>
+    </form>
+{% endblock %}

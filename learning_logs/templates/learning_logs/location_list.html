@@ -26,34 +26,57 @@
     {% endfor %}
   </ul>
 
-  <table id="myTable" class="display">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Parent Location</th>
-        <th>Hierarchy Level</th>
-        <th>Creator</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for location in locations %}
+<table id="myTable" class="display">
+  <thead>
+    <tr>
+      <th>1st Level Location</th>
+      <th>2nd Level Location</th>
+      <th>3rd Level Location</th>
+      <th>4th Level Location</th>
+      <th>Creator</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for location in locations %}
+      {% if location.hierarchy_level == 1 %}
         <tr>
           <td>{{ location.name }}</td>
-          <td>
-              {% if location.parent_location %}
-                {{ location.parent_location.name }}
-              {% else %}
-                Main Location
-              {% endif %}
-          </td>
-          <td>{{ location.hierarchy_level }}</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
           <td>{{ location.creator.username }}</td>
-        </tr>s
-      {% endfor %}
-    </tbody>
-  </table>
+        </tr>
+      {% elif location.hierarchy_level == 2 %}
+        <tr>
+          <td>-</td>
+          <td>{{ location.name }}</td>
+          <td>-</td>
+          <td>-</td>
+          <td>{{ location.creator.username }}</td>
+        </tr>
+      {% elif location.hierarchy_level == 3 %}
+        <tr>
+          <td>-</td>
+          <td>-</td>
+          <td>{{ location.name }}</td>
+          <td>-</td>
+          <td>{{ location.creator.username }}</td>
+        </tr>
+      {% elif location.hierarchy_level == 4 %}
+        <tr>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>{{ location.name }}</td>
+          <td>{{ location.creator.username }}</td>
+        </tr>
+      {% endif %}
+    {% endfor %}
+  </tbody>
+</table>
 
   <h3><a href="{% url 'learning_logs:create_location' %}">Add new location</h3>
+  <h3><a href="{% url 'learning_logs:assign_locations' %}">Assign User to location</a></h3>
 
 {% endblock content %}
 

@@ -22,5 +22,7 @@ urlpatterns = [
     path('locations/<int:location_id>/', views.location_detail, name='location_detail'),
     #Page for creating a new location
     path('create_location/', views.create_location, name='create_location'),
+    #Page for assigning users to lactions
+    path('assign_locations/', views.assign_locations, name='assign_locations'),
 ]
 

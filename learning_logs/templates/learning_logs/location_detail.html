@@ -1,14 +1,12 @@
 {% extends "learning_logs/base.html" %}
 
 {% block header %}
-  <h1>Location Details</h1>
+  <h1>Location Details: {{ location.name }} </h1>
 {% endblock header %}
 
 {% block content %}
 
-  <p>Name: {{ location.name }}</p>
-  <p>Description:
-  {{ location.description }}</p>
+  <h3>Description: {{ location.description }}</h3>
   <a href="{% url 'learning_logs:location_list' %}">Back</a>
 
 {% endblock content %}
