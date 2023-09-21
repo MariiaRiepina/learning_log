@@ -35,10 +35,19 @@ class Locations(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
     creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name='created_locations')
-    users = models.ManyToManyField(User, related_name='locations', blank=True)
     parent_location = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
     hierarchy_level = models.PositiveIntegerField()
 
-
     def __str__(self):
         return self.name
+
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    location = models.ForeignKey(Locations, on_delete=models.CASCADE)
+    username = models.CharField(max_length=150, default='')
+
+    USERNAME_FIELD = 'username'
+
+    def __str__(self):
+       return self.user.username

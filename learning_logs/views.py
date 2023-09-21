@@ -2,14 +2,9 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect, Http404, HttpResponse
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
-from django.db.models import Count
 
-from .models import Topic, Entry, Locations
-from .forms import TopicForm, EntryForm, LocationForm, AssignUserToLocationForm
-
-def get_user(request):
-    users = User.objects.all()
+from .models import Topic, Entry, Locations, UserProfile
+from .forms import TopicForm, EntryForm, LocationForm, ChangeLocationForm
 
 def check_topic_owner(request, topic):
     """Check if the current user is the owner of the topic."""
@@ -113,36 +108,47 @@ def create_location(request):
 
 @login_required()
 def location_list(request):
-    locations = Locations.objects.annotate(num_assigned_users=Count('users')).all()
-    return render(request, 'learning_logs/location_list.html', {'locations': locations})
+    locations = Locations.objects.all()
+    users = UserProfile.objects.all()
+    data_for_table = []
+
+    for user in users:
+        current_location = user.location
+        location_chain = []
+
+        while current_location:
+            location_chain.insert(0, current_location.name)
+            current_location = current_location.parent_location
+
+        data_for_table.append({
+            'username': user.user.username,
+            'location_name': user.location.name,
+            'location_chain': ' ➔ '.join(location_chain) if location_chain else '⚫'
+        })
+
+    context = {'users': users, 'locations': locations, 'data_for_table': data_for_table}
+    return render(request, 'learning_logs/location_list.html', context)
 
 @login_required()
 def location_detail(request, location_id):
     location = Locations.objects.get(id=location_id)
     return render(request, 'learning_logs/location_detail.html', {'location': location})
 
-
 @login_required
-def assign_locations(request):
+def change_location(request):
     if request.method == 'POST':
-        form = AssignUserToLocationForm(request.POST)
-
+        form = ChangeLocationForm(request.POST)
         if form.is_valid():
-            location = form.cleaned_data['location']
             users = form.cleaned_data['users']
+            new_location = form.cleaned_data['new_location']
 
-            # Assign the selected users to the location
-            location.users.set(users)
+            # Update the location for each selected user
+            for user in users:
+                user.location = new_location
+                user.save()
 
             return redirect('learning_logs:location_list')
     else:
-        form = AssignUserToLocationForm()
+        form = ChangeLocationForm()
 
-    user = request.user
-    user_locations = user.assigned_locations.all()  # Retrieve locations associated with the user
-
-    return render(
-        request,
-        'learning_logs/assign_locations.html',
-        {'form': form, 'user_locations': user_locations} )
-
+    return render(request, 'learning_logs/change_location.html', {'form': form})

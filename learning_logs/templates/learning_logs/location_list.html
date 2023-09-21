@@ -13,74 +13,36 @@
 {% endblock header %}
 
 {% block content %}
-  <h1>Locations</h1>
-  <ul>
-    {% for location in locations %}
-      <li>
-        <h3>
-          <a href="{% url 'learning_logs:location_detail' location.id %}">{{ location.name }}</a>
-        </h3>
-      </li>
-    {% empty %}
-      <li>No locations have been added yet.</li>
-    {% endfor %}
-  </ul>
+
+  {% if users %}
+    <p>Users exist!</p>
+  {% else %}
+    <p>No users found.</p>
+  {% endif %}
 
 <table id="myTable" class="display">
   <thead>
     <tr>
-      <th>1st Level Location</th>
-      <th>2nd Level Location</th>
-      <th>3rd Level Location</th>
-      <th>4th Level Location</th>
-      <th>Creator</th>
+      <th>User</th>
+      <th>Location</th>
+      <th>Path to Location</th>
     </tr>
   </thead>
   <tbody>
-    {% for location in locations %}
-      {% if location.hierarchy_level == 1 %}
-        <tr>
-          <td>{{ location.name }}</td>
-          <td>-</td>
-          <td>-</td>
-          <td>-</td>
-          <td>{{ location.creator.username }}</td>
-        </tr>
-      {% elif location.hierarchy_level == 2 %}
-        <tr>
-          <td>-</td>
-          <td>{{ location.name }}</td>
-          <td>-</td>
-          <td>-</td>
-          <td>{{ location.creator.username }}</td>
-        </tr>
-      {% elif location.hierarchy_level == 3 %}
-        <tr>
-          <td>-</td>
-          <td>-</td>
-          <td>{{ location.name }}</td>
-          <td>-</td>
-          <td>{{ location.creator.username }}</td>
-        </tr>
-      {% elif location.hierarchy_level == 4 %}
-        <tr>
-          <td>-</td>
-          <td>-</td>
-          <td>-</td>
-          <td>{{ location.name }}</td>
-          <td>{{ location.creator.username }}</td>
-        </tr>
-      {% endif %}
+    {% for item in data_for_table %}
+      <tr>
+        <td>{{ item.username }}</td>
+        <td>{{ item.location_name }}</td>
+        <td>{{ item.location_chain }}</td>
+      </tr>
     {% endfor %}
   </tbody>
 </table>
 
-  <h3><a href="{% url 'learning_logs:create_location' %}">Add new location</h3>
-  <h3><a href="{% url 'learning_logs:assign_locations' %}">Assign User to location</a></h3>
+  <h3><a href="{% url 'learning_logs:create_location' %}">Add new location</a></h3>
+  <h3><a href="{% url 'learning_logs:change_location' %}">Reassign Location</a></h3>
 
 {% endblock content %}
-
-
 
 
 

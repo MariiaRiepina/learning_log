@@ -4,20 +4,17 @@
 {% block content %}
   <div class="container">
     <div class="col-md-6 col-md-offset-3">
-      <h2>Register a new account</h2>
-      <form method="post" action="{% url 'users:register' %}" class="form">
+      <h2>Change Location for Multiple Users</h2>
+      <form method="post" action="{% url 'learning_logs:change_location' %}" class="form">
         {% csrf_token %}
         {% bootstrap_form form %}
 
         <div class="form-group">
           {% buttons %}
-            <button type="submit" class="btn btn-primary">Register</button>
+            <button type="submit" class="btn btn-primary">Change Location</button>
           {% endbuttons %}
-          <input type="hidden" name="next" value="{% url 'learning_logs:index' %}" />
         </div>
       </form>
     </div>
   </div>
 {% endblock content %}
-
-

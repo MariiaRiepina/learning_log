@@ -18,7 +18,7 @@ LOGIN_URL = '/users/login/'
 BOOTSTRAP3 = {
     'include_jquery': True,
     }
-    
+
 # Heroku settings
 if os.getcwd() == '/app':
     import dj_database_url
