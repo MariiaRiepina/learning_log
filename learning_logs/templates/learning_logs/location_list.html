@@ -3,10 +3,12 @@
 {% block header %}
   {{ block.super }}
   <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/themes/default/style.min.css" />
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/jstree.min.js"></script>
   <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
       $('#myTable').DataTable();
     });
   </script>
@@ -14,33 +16,45 @@
 
 {% block content %}
 
-  {% if users %}
-    <p>Users exist!</p>
-  {% else %}
-    <p>No users found.</p>
-  {% endif %}
-
-<table id="myTable" class="display">
-  <thead>
-    <tr>
-      <th>User</th>
-      <th>Location</th>
-      <th>Path to Location</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for item in data_for_table %}
+  <table id="myTable" class="display">
+    <thead>
       <tr>
-        <td>{{ item.username }}</td>
-        <td>{{ item.location_name }}</td>
-        <td>{{ item.location_chain }}</td>
+        <th>User</th>
+        <th>Location</th>
+        <th>Path to Location</th>
       </tr>
-    {% endfor %}
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      {% for item in data_for_table %}
+        <tr>
+          <td>{{ item.username }}</td>
+          <td>{{ item.location_name }}</td>
+          <td>{{ item.location_chain }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 
   <h3><a href="{% url 'learning_logs:create_location' %}">Add new location</a></h3>
   <h3><a href="{% url 'learning_logs:change_location' %}">Reassign Location</a></h3>
+
+  {% if location_tree %}
+    <p>locations exist!</p>
+  {% else %}
+    <p>No locations found.</p>
+  {% endif %}
+
+  <div id="locationTree"></div>
+
+  <script>
+    $(document).ready(function () {
+      $('#locationTree').jstree({
+        'core': {
+          'data': '{{ location_tree|safe }}',
+        },
+      });
+    });
+  </script>
 
 {% endblock content %}
 

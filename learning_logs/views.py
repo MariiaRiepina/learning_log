@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 
 from .models import Topic, Entry, Locations, UserProfile
 from .forms import TopicForm, EntryForm, LocationForm, ChangeLocationForm
+import json
 
 def check_topic_owner(request, topic):
     """Check if the current user is the owner of the topic."""
@@ -152,3 +153,28 @@ def change_location(request):
         form = ChangeLocationForm()
 
     return render(request, 'learning_logs/change_location.html', {'form': form})
+
+#Preparing the data for jsTree
+def generate_location_tree():
+    locations = Locations.objects.all()
+    location_tree = []
+
+    for location in locations:
+        location_info = {
+            "id": location.id,
+            "text": location.name,
+        }
+        if location.parent_location:
+            location_info["parent"] = location.parent_location_id
+        else:
+            location_info["parent"] = "#"
+        location_tree.append(location_info)
+
+    return json.dumps(location_tree)
+
+def location_tree(request):
+    locations = Locations.objects.all()
+    location_tree = generate_location_tree()
+
+    context = {'locations': locations, 'location_tree': location_tree}
+    return render(request, 'learning_logs/location_list.html', context)
